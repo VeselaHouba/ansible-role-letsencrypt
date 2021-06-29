@@ -8,7 +8,7 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 
 def test_nginx_file(host):
     f = host.file('/etc/letsencrypt/renewal-hooks/post/nginx.sh')
-    assert not f.exists
+    assert f.exists
 
 
 def test_dhparam_file(host):

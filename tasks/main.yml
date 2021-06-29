@@ -1,4 +1,16 @@
 ---
+- name: Check if nginx is installed
+  package:
+    name: nginx
+    state: present
+  check_mode: true
+  register: nginx_check
+
+- name: Fail if nginx is not installed
+  fail:
+    msg: "Nginx installation not found. This role requires Nginx to run"
+  when: nginx_check is not succeeded
+
 - name: Install letsencrypt
   apt:
     name: letsencrypt
@@ -23,17 +35,17 @@
   loop_control:
     loop_var: crt
     label: "{{ crt.name }}"
-  with_items: "{{ ssl_certs_letsencrypt_list }}"
+  with_items: "{{ letsencrypt_cert_list }}"
   when: crt.state|default('present') == 'present'
 
 - name: Undeploy certs which should be undeployed
   include_tasks: undeploy_letsencrypt.yml
   loop_control:
     loop_var: crt
-  with_items: "{{ ssl_certs_letsencrypt_list }}"
+  with_items: "{{ letsencrypt_cert_list }}"
   when: crt.state|default('present') == 'absent'
 
 - name: Generate dhparam if it doesn't exist yet
-  command: "openssl dhparam -out {{ ssl_certs_dhparam }} 2048"
+  command: "openssl dhparam -out {{ letsencrypt_dhparam }} 2048"
   args:
-    creates: "{{ ssl_certs_dhparam }}"
+    creates: "{{ letsencrypt_dhparam }}"
