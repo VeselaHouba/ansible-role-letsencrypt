@@ -1,0 +1,16 @@
+---
+letsencrypt_cert_list: []
+# example:
+# ssl_certs_letsencrypt_list:
+#   - name: certificate1_fqdn
+#     mail: support@example.com
+#
+#   - name: certificate2_fqdn
+#     altnames:
+#       - www.certificate2_fqdn
+#       - dev.certificate2_fqdn
+#     mail: support@example.com
+#   - name: certificate3_fqdn
+#     state: absent
+
+letsencrypt_dhparam: /etc/ssl/dhparam.pem

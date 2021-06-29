@@ -1,0 +1,9 @@
+---
+- name: "De-Register domain {{ crt.name }} via certbot"
+  command: >
+    certbot delete
+    --cert-name {{ crt.name }}
+    --non-interactive
+  args:
+    removes: "/etc/letsencrypt/live/{{ crt.name }}/fullchain.pem"
+  register: letsencrypt_output

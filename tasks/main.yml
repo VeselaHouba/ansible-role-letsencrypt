@@ -1,0 +1,39 @@
+---
+- name: Install letsencrypt
+  apt:
+    name: letsencrypt
+
+- name: Create needed dirs
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - /var/www/letsencrypt/
+    - /etc/letsencrypt/renewal-hooks/post
+
+- name: Deploy restart hook if nginx is installed
+  copy:
+    src: etc/letsencrypt/renewal-hooks/post/nginx.sh
+    dest: /etc/letsencrypt/renewal-hooks/post/nginx.sh
+    mode: 0755
+
+- name: Deploy letsencrypt certs
+  include_tasks: deploy_letsencrypt.yml
+  loop_control:
+    loop_var: crt
+    label: "{{ crt.name }}"
+  with_items: "{{ ssl_certs_letsencrypt_list }}"
+  when: crt.state|default('present') == 'present'
+
+- name: Undeploy certs which should be undeployed
+  include_tasks: undeploy_letsencrypt.yml
+  loop_control:
+    loop_var: crt
+  with_items: "{{ ssl_certs_letsencrypt_list }}"
+  when: crt.state|default('present') == 'absent'
+
+- name: Generate dhparam if it doesn't exist yet
+  command: "openssl dhparam -out {{ ssl_certs_dhparam }} 2048"
+  args:
+    creates: "{{ ssl_certs_dhparam }}"
