@@ -18,7 +18,7 @@ location ~ /\.well-known/acme-challenge/ {
 Example
 
 ```
-ssl_certs_letsencrypt_list:
+letsencrypt_cert_list:
   - name: certificate1_fqdn
     mail: support@example.com
 
