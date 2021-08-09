@@ -4,6 +4,7 @@
     name: nginx
     state: present
   check_mode: true
+  changed_when: false
   register: nginx_check
 
 - name: Fail if nginx is not installed
