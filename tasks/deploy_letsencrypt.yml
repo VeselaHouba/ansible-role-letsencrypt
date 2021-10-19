@@ -1,4 +1,8 @@
 ---
+- name: Reset altdomainnames variable
+  set_fact:
+    altdomainnames: ""
+
 - name: Prepare alt domain names
   set_fact:
     altdomainnames: "-d {{ crt.altnames | join(' -d ') }}"
