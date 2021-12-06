@@ -1,7 +1,7 @@
 ---
 - name: "De-Register domain {{ crt.name }} via certbot"
   command: >
-    certbot delete
+    certbot revoke
     --cert-name {{ crt.name }}
     --non-interactive
   args:
